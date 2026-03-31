@@ -1,4 +1,3 @@
-# Genai_assignment_3
 # Assignment 3 – Python Functions, Lambdas & Functional Programming
 
 A hands-on Jupyter Notebook covering core Python concepts: default parameters, recursion, lambda expressions, `map()`, `filter()`, and interactive menu-driven programs.
@@ -36,7 +35,9 @@ Run cells **in order from top to bottom** using **Shift + Enter** (or the ▶ Ru
 
 **What it does:** Defines `apply_discount(price, discount_percentage=5)` which applies a percentage discount to a price. The discount defaults to 5% if not provided. Raises an error if the discount is outside the valid range (0–60%).
 
-**Key concept:** **Default parameter values** — allows a function to be called with fewer arguments than it defines.
+**Key concepts:**
+- **Default parameter values** — allows a function to be called with fewer arguments than it defines.
+- **Graceful error handling** — invalid discounts raise a `ValueError` instead of calling `exit()`, which would crash the entire kernel. This lets the caller decide how to handle the error.
 
 **Test cases to try:**
 
@@ -44,8 +45,8 @@ Run cells **in order from top to bottom** using **Shift + Enter** (or the ▶ Ru
 apply_discount(1000, 10)   # → 900.0  (10% off 1000)
 apply_discount(500)        # → 475.0  (default 5% off 500)
 apply_discount(200, 0)     # → 200.0  (0% discount, no change)
-apply_discount(200, 75)    # → Error: discount > 60%
-apply_discount(200, -5)    # → Error: discount < 0%
+apply_discount(200, 75)    # → raises ValueError: discount > 60%
+apply_discount(200, -5)    # → raises ValueError: discount < 0%
 ```
 
 ---
@@ -56,7 +57,10 @@ apply_discount(200, -5)    # → Error: discount < 0%
 
 **What it does:** Defines `factorial(n)` which computes the factorial of a non-negative integer using an iterative loop. Returns `None` and prints a message for negative inputs.
 
-**Key concept:** **Iterative logic with edge case handling** — uses `range(n, 1, -1)` to multiply downward, and guards against invalid (negative) input.
+**Key concepts:**
+- **Recursion** — the function calls itself with a smaller input (`n * factorial(n-1)`) until it reaches the base case (`n == 0 or n == 1`). This replaces the previous `for` loop.
+- **Base case + recursive case** — every recursive function needs a base case to stop infinite calls, and a recursive case that moves toward it.
+- **Graceful return** — returns `None` for negative input instead of crashing with `exit()`.
 
 **Test cases to try:**
 
@@ -135,24 +139,26 @@ list(filter(lambda x: x > 300, prices))    # → [400, 1200, 2000, 850]
 
 **Run:** Cell 12
 
-**What it does:** `process_prices(prices)` chains two operations: first applies a 10% discount to all prices using `map()`, then filters out any discounted prices below 300 using `filter()`.
+**What it does:** `process_prices(prices)` chains two operations: first applies a 10% discount to all prices using `map()`, then filters out any discounted prices below 300 using `filter()`. The function now **returns both lists** as a tuple so the caller has access to all intermediate and final results.
 
-**Key concept:** **Function composition with `map()` + `filter()`** — demonstrates a functional programming pipeline where data flows through transformations step by step.
+**Key concepts:**
+- **Function composition with `map()` + `filter()`** — demonstrates a functional programming pipeline where data flows through transformations step by step.
+- **Returning multiple values** — Python functions can return a tuple of values (e.g. `return disc_p, filtered_p`), which the caller unpacks with `all_discounted, above_threshold = process_prices(...)`.
 
 **Test cases to try:**
 
 ```python
-process_prices([100, 500, 900, 50, 750])
-# After 10% discount: [90.0, 450.0, 810.0, 45.0, 675.0]
-# After filtering >300: [450.0, 810.0, 675.0]
+all_discounted, above_threshold = process_prices([100, 500, 900, 50, 750])
+# all_discounted  → [90.0, 450.0, 810.0, 45.0, 675.0]
+# above_threshold → [450.0, 810.0, 675.0]
 
-process_prices([1000, 200, 600])
-# After discount: [900.0, 180.0, 540.0]
-# After filtering: [900.0, 540.0]
+all_discounted, above_threshold = process_prices([1000, 200, 600])
+# all_discounted  → [900.0, 180.0, 540.0]
+# above_threshold → [900.0, 540.0]
 
-process_prices([50, 100])
-# After discount: [45.0, 90.0]
-# After filtering: []  (empty — nothing above 300)
+all_discounted, above_threshold = process_prices([50, 100])
+# all_discounted  → [45.0, 90.0]
+# above_threshold → []  (empty — nothing above 300)
 ```
 
 ---
@@ -188,10 +194,10 @@ Enter your choice: q   → prints: Exited!!!
 
 | Task | Concept |
 |------|---------|
-| 1 | Default parameter values |
-| 2 | Iterative loops, edge case handling, returning `None` |
+| 1 | Default parameter values; `raise ValueError` for graceful error handling |
+| 2 | **Recursion** (base case + recursive case); returning `None` gracefully |
 | 3 | Lambda expressions for inline calculations |
 | 4 | `map()` for applying a function to every element |
 | 5 | `filter()` for selecting elements by condition |
-| 6 | Chaining `map()` and `filter()` (functional pipeline) |
+| 6 | Chaining `map()` + `filter()`; **returning multiple values** as a tuple |
 | 7 | Modular functions, `while` loop, `try/except`, user input |
